@@ -2487,18 +2487,6 @@ private fun CommunityFooter() {
                 modifier = Modifier.padding(top = 8.dp).testTag("telegram-unavailable"),
             )
         }
-        Spacer(Modifier.height(10.dp))
-        Text(
-            stringResource(R.string.t_me_whitedns),
-            style = AetherTheme.type.Data.copy(fontSize = 12.5f.sp),
-            color = colors.text3,
-        )
-        Spacer(Modifier.height(4.dp))
-        Text(
-            stringResource(R.string.news_releases_and_help),
-            style = AetherTheme.type.Small,
-            color = colors.text3,
-        )
         Spacer(Modifier.height(18.dp))
         Icon(AetherIcons.Globe, null, Modifier.size(22.dp), colors.text3.copy(alpha = 0.5f))
         Spacer(Modifier.height(6.dp))
