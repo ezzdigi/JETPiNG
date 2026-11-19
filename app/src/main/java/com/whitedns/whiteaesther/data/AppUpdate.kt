@@ -51,7 +51,7 @@ data class ApkIdentity(
  */
 object AppUpdatePolicy {
     /** The repository this app will accept a release from, and nowhere else. */
-    const val REPOSITORY = "ezzdigi/JETPiNG"
+    const val REPOSITORY = "JETPiNG-app/JETPiNG"
 
     /** Assets are named for the app, the version and the architecture. */
     fun apkNameFor(version: String, variant: ApkVariant): String =

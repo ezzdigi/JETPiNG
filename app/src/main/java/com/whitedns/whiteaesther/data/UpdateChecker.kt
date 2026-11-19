@@ -23,9 +23,9 @@ import java.net.URL
  */
 object UpdateChecker {
     private const val LATEST_RELEASE_URL =
-        "https://api.github.com/repos/ezzdigi/JETPiNG/releases/latest"
+        "https://api.github.com/repos/JETPiNG-app/JETPiNG/releases/latest"
     private const val RELEASES_PAGE =
-        "https://github.com/ezzdigi/JETPiNG/releases/latest"
+        "https://github.com/JETPiNG-app/JETPiNG/releases/latest"
     private const val TIMEOUT_MS = 8_000
 
     /** Once a day is often enough for something released every few weeks. */
