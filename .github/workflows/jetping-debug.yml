@@ -58,6 +58,7 @@ jobs:
 
       - name: Test and build stable debug APKs
         run: |
+          chmod +x ./gradlew
           ./gradlew testStableDebugUnitTest lintStableDebug assembleStableDebug
 
       - name: Verify APKs
