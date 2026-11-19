@@ -174,18 +174,18 @@ class AppUpdatePolicyTest {
     @Test
     fun aDownloadUrlPointingElsewhereIsRefused() {
         for (url in listOf(
-            "https://example.com/WhiteDNS/WhiteAestherMobile/releases/download/1.9.0/x.apk",
-            "http://github.com/WhiteDNS/WhiteAestherMobile/releases/download/1.9.0/x.apk",
+            "https://example.com/ezzdigi/JETPiNG/releases/download/1.9.0/x.apk",
+            "http://github.com/ezzdigi/JETPiNG/releases/download/1.9.0/x.apk",
             "https://github.com/someone/else/releases/download/1.9.0/x.apk",
-            "https://github.com/WhiteDNS/WhiteAestherMobile/releases/download/1.9.0/x.apk?to=elsewhere",
-            "https://user@github.com/WhiteDNS/WhiteAestherMobile/releases/download/1.9.0/x.apk",
+            "https://github.com/ezzdigi/JETPiNG/releases/download/1.9.0/x.apk?to=elsewhere",
+            "https://user@github.com/ezzdigi/JETPiNG/releases/download/1.9.0/x.apk",
         )) {
             assertThrows(url, IOException::class.java) {
                 AppUpdatePolicy.requireDownloadUrl(url, "1.9.0", "x.apk")
             }
         }
         AppUpdatePolicy.requireDownloadUrl(
-            "https://github.com/WhiteDNS/WhiteAestherMobile/releases/download/1.9.0/x.apk",
+            "https://github.com/ezzdigi/JETPiNG/releases/download/1.9.0/x.apk",
             "1.9.0",
             "x.apk",
         )
