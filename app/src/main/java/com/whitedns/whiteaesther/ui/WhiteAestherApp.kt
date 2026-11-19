@@ -456,7 +456,7 @@ private fun FamilyHeader() {
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(painterResource(R.mipmap.ic_launcher_foreground), null,
+        Image(painterResource(R.drawable.jetping_logo), null,
             Modifier.size(40.dp).clip(androidx.compose.foundation.shape.CircleShape))
         Text(
             stringResource(R.string.app_name), style = AetherTheme.type.RowTitle,
