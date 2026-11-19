@@ -5,8 +5,8 @@
 **Android client for the Aether encrypted route engine.**
 Finds a working path out of restrictive networks and carries your traffic through it.
 
-[![Release](https://img.shields.io/github/v/release/WhiteDNS/JETPiNG?style=flat-square&color=34d1a6)](https://github.com/WhiteDNS/JETPiNG/releases/latest)
-[![CI](https://img.shields.io/github/actions/workflow/status/WhiteDNS/JETPiNG/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/WhiteDNS/JETPiNG/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ezzdigi/JETPiNG?style=flat-square&color=34d1a6)](https://github.com/ezzdigi/JETPiNG/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/ezzdigi/JETPiNG/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/ezzdigi/JETPiNG/actions/workflows/ci.yml)
 [![Licence](https://img.shields.io/badge/licence-AGPL--3.0-blue?style=flat-square)](LICENSE)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84?style=flat-square&logo=android&logoColor=white)](#requirements)
 
@@ -16,7 +16,7 @@ Finds a working path out of restrictive networks and carries your traffic throug
 
 ## Install
 
-Grab the APK for your phone from the [latest release](https://github.com/WhiteDNS/JETPiNG/releases/latest).
+Grab the APK for your phone from the [latest release](https://github.com/ezzdigi/JETPiNG/releases/latest).
 
 | File | Use it if |
 | --- | --- |
@@ -141,7 +141,7 @@ Android 8.0 (API 26) or newer, on `arm64-v8a`, `armeabi-v7a` or `x86_64`.
 ## Build from source
 
 ```bash
-git clone https://github.com/WhiteDNS/JETPiNG.git
+git clone https://github.com/ezzdigi/JETPiNG.git
 cd JETPiNG
 ./gradlew assembleStableDebug
 ```
