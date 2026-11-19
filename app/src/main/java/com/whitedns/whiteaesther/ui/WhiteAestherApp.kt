@@ -533,7 +533,8 @@ private fun TabBar(selected: Tab?, onSelect: (Tab) -> Unit) {
     ) {
         Row(
             Modifier.widthIn(max = 520.dp).fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp)).background(colors.ink2).selectableGroup(),
+                .clip(RoundedCornerShape(24.dp)).background(Color.White.copy(alpha = 0.055f))
+                .border(1.dp, Color.White.copy(alpha = 0.12f), RoundedCornerShape(24.dp)).selectableGroup(),
         ) {
             Tab.entries.forEach { tab ->
                 val active = tab == selected
