@@ -7,6 +7,7 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
@@ -62,6 +63,11 @@ internal class ConnectionOrbView(
         textAlign = Paint.Align.CENTER
     }
     private val particlePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val wolfPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val wolfBounds = RectF()
+    private val wolfBitmap by lazy(LazyThreadSafetyMode.NONE) {
+        BitmapFactory.decodeResource(resources, R.drawable.jetping_wolf)
+    }
 
     private val orbPath = Path()
     private val iconBounds = RectF()
@@ -214,7 +220,7 @@ internal class ConnectionOrbView(
 
         // 8. Draw icon and label
         drawIcon(canvas, cx, cy - dp(6f))
-        drawLabel(canvas, cx, cy + dp(36f))
+        if (state != ConnectState.LIVE) drawLabel(canvas, cx, cy + dp(36f))
 
         canvas.restore()
 
@@ -457,27 +463,15 @@ internal class ConnectionOrbView(
     }
 
     private fun drawIcon(canvas: Canvas, cx: Float, cy: Float) {
-        val isConnected = state == ConnectState.LIVE
-
-        iconPaint.color = currentForeground()
-
-        val size = dp(14f)
-
-        when {
-            isConnected -> {
-                // Disconnect icon: power with slash
-                iconBounds.set(cx - size, cy - size * 0.7f, cx + size, cy + size * 1.3f)
-                canvas.drawArc(iconBounds, -55f, 290f, false, iconPaint)
-                canvas.drawLine(cx, cy - size * 1.3f, cx, cy + dp(2f), iconPaint)
-                canvas.drawLine(cx - size * 1.1f, cy + size * 1.1f, cx + size * 1.1f, cy - size * 1.1f, iconPaint)
-            }
-            else -> {
-                // Power icon
-                iconBounds.set(cx - size, cy - size * 0.7f, cx + size, cy + size * 1.3f)
-                canvas.drawArc(iconBounds, -55f, 290f, false, iconPaint)
-                canvas.drawLine(cx, cy - size * 1.3f, cx, cy + dp(2f), iconPaint)
-            }
-        }
+        // The scattered dust is the idle/connecting mark. Once the tunnel is
+        // live, the supplied JETPiNG wolf artwork fades into the same orb area.
+        if (state != ConnectState.LIVE) return
+        val bitmap = wolfBitmap ?: return
+        val size = orbDiameter * 0.96f
+        wolfBounds.set(cx - size / 2f, cy - size / 2f, cx + size / 2f, cy + size / 2f)
+        wolfPaint.alpha = (255f * transitionProgress.coerceIn(0f, 1f)).toInt()
+        canvas.drawBitmap(bitmap, null, wolfBounds, wolfPaint)
+        wolfPaint.alpha = 255
     }
 
     private fun drawLabel(canvas: Canvas, cx: Float, cy: Float) {
@@ -520,7 +514,7 @@ internal class ConnectionOrbView(
             when (state) {
                 ConnectState.IDLE, ConnectState.FAILED -> emitDustField()
                 ConnectState.WORKING -> emitConvergingParticles()
-                ConnectState.LIVE -> emitConnectedParticles()
+                ConnectState.LIVE -> if (transitionProgress < 1f) emitConnectedParticles()
             }
             lastParticleTime = now
         }
@@ -561,7 +555,7 @@ internal class ConnectionOrbView(
         val cx = width / 2f
         val cy = height / 2f
         val colors = particleColors()
-        repeat(5) {
+        repeat(14) {
             val angle = Random.nextFloat() * 2f * PI.toFloat()
             val radius = orbRadius * (0.18f + Random.nextFloat() * 1.05f)
             particles.add(Particle(
@@ -577,14 +571,14 @@ internal class ConnectionOrbView(
                 slow = true,
             ))
         }
-        while (particles.size > 260) particles.removeAt(0)
+        while (particles.size > 420) particles.removeAt(0)
     }
 
     private fun emitConvergingParticles() {
         val cx = width / 2f
         val cy = height / 2f
         val colors = particleColors()
-        repeat(7) {
+        repeat(14) {
             val angle = Random.nextFloat() * 2f * PI.toFloat()
             val radius = orbRadius * (0.72f + Random.nextFloat() * 0.5f)
             val speed = 0.65f + Random.nextFloat() * 0.9f
@@ -601,7 +595,7 @@ internal class ConnectionOrbView(
                 slow = false,
             ))
         }
-        while (particles.size > 300) particles.removeAt(0)
+        while (particles.size > 420) particles.removeAt(0)
     }
 
     private fun emitConnectedParticles() {
