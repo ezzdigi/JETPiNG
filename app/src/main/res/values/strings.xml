@@ -199,10 +199,6 @@
     <string name="see_what_happened_and_send_a_report">See what happened, and send a report to the developer</string>
     <string name="about_whiteaesther">About WhiteAesther</string>
     <string name="version_engine_build_and_licences">Version, engine build, and licences</string>
-    <string name="join_us_on_telegram">Join us on Telegram</string>
-    <string name="no_app_on_this_device_can_open">No app on this device can open the community link.</string>
-    <string name="t_me_whitedns">t.me/whitedns</string>
-    <string name="news_releases_and_help">News, releases and help</string>
     <string name="whiteaesther_com_whitedns_whiteaesther_buildconf">WhiteAesther %1$s</string>
     <string name="settings_identity">Settings · Identity</string>
     <string name="whiteaesther_issues_this_device_its_own_identity">WhiteAesther issues this device its own identity. There is no account to create.</string>
