@@ -89,6 +89,7 @@ jobs:
 
       - name: Test, lint and package Android
         run: >-
+          chmod +x ./gradlew &&
           ./gradlew
           testPreviewDebugUnitTest
           lintPreviewDebug
