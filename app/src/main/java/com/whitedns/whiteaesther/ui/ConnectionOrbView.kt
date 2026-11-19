@@ -199,22 +199,15 @@ internal class ConnectionOrbView(
             canvas.translate(0f, dp(3f) * (1f - pressScale) / 0.06f)
         }
 
-        // 1. Draw particles behind orb
+        // Outer glow and translucent core leave room for the particle field.
+        drawOuterGlow(canvas, cx, cy)
+        buildSmoothBlobPath(cx, cy)
+        drawOrbBase(canvas, cx, cy)
+        drawOrbEffects(canvas, cx, cy)
+        // Dust sits above the glassy core and gathers into it as connection starts.
         drawParticles(canvas)
 
-        // 2. Draw outer breathing glow
-        drawOuterGlow(canvas, cx, cy)
-
-        // 4. Build smooth blob path
-        buildSmoothBlobPath(cx, cy)
-
-        // 5. Draw main orb with gradient
-        drawOrbBase(canvas, cx, cy)
-
-        // 6. Draw inner effects (highlights, shadows, mist)
-        drawOrbEffects(canvas, cx, cy)
-
-        // 7. Draw press shade overlay
+        // Press shade overlay
         if (shadeOpacity > 0f) {
             drawPressShade(canvas, cx, cy)
         }
@@ -321,8 +314,14 @@ internal class ConnectionOrbView(
             currentGradientEnd(),
             Shader.TileMode.CLAMP,
         )
-
+        orbPaint.alpha = when (state) {
+            ConnectState.IDLE -> 24
+            ConnectState.WORKING -> 58
+            ConnectState.LIVE -> 112
+            ConnectState.FAILED -> 48
+        }
         canvas.drawPath(orbPath, orbPaint)
+        orbPaint.alpha = 255
     }
 
     private fun drawOrbEffects(canvas: Canvas, cx: Float, cy: Float) {
@@ -510,15 +509,19 @@ internal class ConnectionOrbView(
         val cx = width / 2f
         val cy = height / 2f
 
-        // Emit circular particles when connecting/disconnecting (slower rate for performance)
-        val isConnecting = state == ConnectState.WORKING
-        if (isConnecting && now - lastParticleTime >= 80L) {
-            emitCircularParticles()
-            lastParticleTime = now
-        }
-        // Emit ambient particles when connected (slower rate for performance)
-        else if (state == ConnectState.LIVE && now - lastParticleTime >= 150L) {
-            emitAmbientParticles()
+        // A loose cloud at rest, inward-moving dust during handshake, and a
+        // compact constellation once the tunnel is live.
+        if (now - lastParticleTime >= when (state) {
+                ConnectState.IDLE -> 85L
+                ConnectState.WORKING -> 55L
+                ConnectState.LIVE -> 95L
+                ConnectState.FAILED -> 180L
+            }) {
+            when (state) {
+                ConnectState.IDLE, ConnectState.FAILED -> emitDustField()
+                ConnectState.WORKING -> emitConvergingParticles()
+                ConnectState.LIVE -> emitConnectedParticles()
+            }
             lastParticleTime = now
         }
 
@@ -552,6 +555,76 @@ internal class ConnectionOrbView(
             }
         }
 
+    }
+
+    private fun emitDustField() {
+        val cx = width / 2f
+        val cy = height / 2f
+        val colors = particleColors()
+        repeat(5) {
+            val angle = Random.nextFloat() * 2f * PI.toFloat()
+            val radius = orbRadius * (0.18f + Random.nextFloat() * 1.05f)
+            particles.add(Particle(
+                x = cx + cos(angle) * radius,
+                y = cy + sin(angle) * radius,
+                vx = (Random.nextFloat() - 0.5f) * 0.22f,
+                vy = (Random.nextFloat() - 0.5f) * 0.22f,
+                size = dp(1.1f + Random.nextFloat() * 2.0f),
+                life = 0f,
+                maxLife = 1800f + Random.nextFloat() * 1500f,
+                alpha = 0.38f + Random.nextFloat() * 0.42f,
+                color = colors[Random.nextInt(colors.size)],
+                slow = true,
+            ))
+        }
+        while (particles.size > 260) particles.removeAt(0)
+    }
+
+    private fun emitConvergingParticles() {
+        val cx = width / 2f
+        val cy = height / 2f
+        val colors = particleColors()
+        repeat(7) {
+            val angle = Random.nextFloat() * 2f * PI.toFloat()
+            val radius = orbRadius * (0.72f + Random.nextFloat() * 0.5f)
+            val speed = 0.65f + Random.nextFloat() * 0.9f
+            particles.add(Particle(
+                x = cx + cos(angle) * radius,
+                y = cy + sin(angle) * radius,
+                vx = -cos(angle) * speed,
+                vy = -sin(angle) * speed,
+                size = dp(1.2f + Random.nextFloat() * 2.1f),
+                life = 0f,
+                maxLife = 1000f + Random.nextFloat() * 500f,
+                alpha = 0.65f + Random.nextFloat() * 0.3f,
+                color = colors[Random.nextInt(colors.size)],
+                slow = false,
+            ))
+        }
+        while (particles.size > 300) particles.removeAt(0)
+    }
+
+    private fun emitConnectedParticles() {
+        val cx = width / 2f
+        val cy = height / 2f
+        val colors = particleColors()
+        repeat(6) {
+            val angle = Random.nextFloat() * 2f * PI.toFloat()
+            val radius = orbRadius * (0.08f + Random.nextFloat() * 0.78f)
+            particles.add(Particle(
+                x = cx + cos(angle) * radius,
+                y = cy + sin(angle) * radius,
+                vx = (Random.nextFloat() - 0.5f) * 0.05f,
+                vy = (Random.nextFloat() - 0.5f) * 0.05f,
+                size = dp(1.0f + Random.nextFloat() * 1.8f),
+                life = 0f,
+                maxLife = 1700f + Random.nextFloat() * 1200f,
+                alpha = 0.58f + Random.nextFloat() * 0.38f,
+                color = colors[Random.nextInt(colors.size)],
+                slow = true,
+            ))
+        }
+        while (particles.size > 300) particles.removeAt(0)
     }
 
     private fun emitAmbientParticles() {
@@ -821,9 +894,9 @@ internal data class ConnectionOrbColors(
             onAccent = 0xFF02130C.toInt(),
             onProminent = 0xFF020705.toInt(),
             onStateFill = 0xFFF4FAF7.toInt(),
-            teal = 0xFF3FBE90.toInt(),
-            tealGradientEnd = 0xFF71CDA7.toInt(),
-            tealGradientStart = 0xFF3FBE90.toInt(),
+            teal = 0xFFFF7900.toInt(),
+            tealGradientEnd = 0xFFFFA12B.toInt(),
+            tealGradientStart = 0xFFFF7900.toInt(),
             textPrimary = 0xFFE4EEE9.toInt(),
             textSecondary = 0xFF9BA8A2.toInt(),
             failed = 0xFFF07F77.toInt(),
@@ -838,9 +911,9 @@ internal data class ConnectionOrbColors(
             onAccent = 0xFFF4FAF7.toInt(),
             onProminent = 0xFFF4FAF7.toInt(),
             onStateFill = 0xFFF4FAF7.toInt(),
-            teal = 0xFF007E50.toInt(),
-            tealGradientEnd = 0xFF4BAE87.toInt(),
-            tealGradientStart = 0xFF007E50.toInt(),
+            teal = 0xFFE66D00.toInt(),
+            tealGradientEnd = 0xFFFFA12B.toInt(),
+            tealGradientStart = 0xFFE66D00.toInt(),
             textPrimary = 0xFF0A1410.toInt(),
             textSecondary = 0xFF495650.toInt(),
             failed = 0xFFCF4040.toInt(),
