@@ -195,10 +195,6 @@
     <string name="see_what_happened_and_send_a_report">ببینید چه اتفاقی افتاد، و گزارشی برای توسعه‌دهنده بفرستید</string>
     <string name="about_whiteaesther">دربارهٔ WhiteAesther</string>
     <string name="version_engine_build_and_licences">نسخه، بیلد هسته، و مجوزها</string>
-    <string name="join_us_on_telegram">در تلگرام به ما بپیوندید</string>
-    <string name="no_app_on_this_device_can_open">هیچ برنامه‌ای روی این دستگاه نمی‌تواند لینک کانال را باز کند.</string>
-    <string name="t_me_whitedns">t.me/whitedns</string>
-    <string name="news_releases_and_help">اخبار، انتشارها و راهنما</string>
     <string name="whiteaesther_com_whitedns_whiteaesther_buildconf">WhiteAesther %1$s</string>
     <string name="settings_identity">تنظیمات · هویت</string>
     <string name="whiteaesther_issues_this_device_its_own_identity">‏WhiteAesther به این دستگاه هویت مخصوص خودش را می‌دهد. حسابی برای ساختن وجود ندارد.</string>

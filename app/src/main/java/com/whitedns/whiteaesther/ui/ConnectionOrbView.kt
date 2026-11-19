@@ -511,14 +511,9 @@ internal class ConnectionOrbView(
         val cy = height / 2f
 
         // Emit circular particles when connecting/disconnecting (slower rate for performance)
-        val isConnecting = state == ConnectState.WORKING
-        if (isConnecting && now - lastParticleTime >= 80L) {
+        val isConnecting = state == ConnectState.WORKING || state == ConnectState.LIVE
+        if (isConnecting && now - lastParticleTime >= if (state == ConnectState.LIVE) 125L else 80L) {
             emitCircularParticles()
-            lastParticleTime = now
-        }
-        // Emit ambient particles when connected (slower rate for performance)
-        else if (state == ConnectState.LIVE && now - lastParticleTime >= 150L) {
-            emitAmbientParticles()
             lastParticleTime = now
         }
 
@@ -812,18 +807,18 @@ internal data class ConnectionOrbColors(
     companion object {
         // Same component palette as WhiteDNS 1.6.9 and WhiteVPN.
         val Dark = ConnectionOrbColors(
-            amber = 0xFFE8AA4E.toInt(),
-            amberGradientEnd = 0xFFD99A35.toInt(),
-            amberGradientStart = 0xFFF0B96B.toInt(),
-            background = 0xFF050E09.toInt(),
+            amber = 0xFFFF8A00.toInt(),
+            amberGradientEnd = 0xFFFF6A00.toInt(),
+            amberGradientStart = 0xFFFFB04A.toInt(),
+            background = 0xFF080808.toInt(),
             isDark = true,
-            neutral = 0xFF89968F.toInt(),
+            neutral = 0xFF5D6268.toInt(),
             onAccent = 0xFF02130C.toInt(),
             onProminent = 0xFF020705.toInt(),
             onStateFill = 0xFFF4FAF7.toInt(),
-            teal = 0xFF3FBE90.toInt(),
-            tealGradientEnd = 0xFF71CDA7.toInt(),
-            tealGradientStart = 0xFF3FBE90.toInt(),
+            teal = 0xFFFF7900.toInt(),
+            tealGradientEnd = 0xFFFFA13A.toInt(),
+            tealGradientStart = 0xFFFF7900.toInt(),
             textPrimary = 0xFFE4EEE9.toInt(),
             textSecondary = 0xFF9BA8A2.toInt(),
             failed = 0xFFF07F77.toInt(),
@@ -834,13 +829,13 @@ internal data class ConnectionOrbColors(
             amberGradientStart = 0xFFE8AA4E.toInt(),
             background = 0xFFF1F9F5.toInt(),
             isDark = false,
-            neutral = 0xFF394640.toInt(),
+            neutral = 0xFF777777.toInt(),
             onAccent = 0xFFF4FAF7.toInt(),
             onProminent = 0xFFF4FAF7.toInt(),
             onStateFill = 0xFFF4FAF7.toInt(),
-            teal = 0xFF007E50.toInt(),
-            tealGradientEnd = 0xFF4BAE87.toInt(),
-            tealGradientStart = 0xFF007E50.toInt(),
+            teal = 0xFFFF7900.toInt(),
+            tealGradientEnd = 0xFFFFA13A.toInt(),
+            tealGradientStart = 0xFFFF7900.toInt(),
             textPrimary = 0xFF0A1410.toInt(),
             textSecondary = 0xFF495650.toInt(),
             failed = 0xFFCF4040.toInt(),

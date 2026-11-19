@@ -87,6 +87,9 @@ jobs:
         shell: pwsh
         run: ./native/xray/build.ps1
 
+      - name: Ensure Gradle wrapper is executable
+        run: chmod +x ./gradlew
+
       - name: Test, lint and package Android
         run: >-
           ./gradlew

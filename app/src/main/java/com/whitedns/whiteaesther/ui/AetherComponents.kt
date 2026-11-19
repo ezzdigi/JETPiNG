@@ -185,11 +185,6 @@ object AetherIcons {
         stroke(1.45f, "M12 4.67c2.07 2.07 3.07 4.67 3.07 7.33s-1 5.26-3.07 7.33")
     }.build()
 
-    val Telegram = strokeIcon(
-        "telegram",
-        "M21.5 4.3 2.9 11.4a.6.6 0 0 0 .05 1.13l4.6 1.44 1.77 5.3a.6.6 0 0 0 1 .24l2.5-2.5 4.6 3.4a.6.6 0 0 0 .95-.36l3.1-15a.6.6 0 0 0-.82-.68Z",
-        "m7.55 13.97 11.2-7.4-7.9 8.5",
-    )
 }
 
 // ----------------------------------------------------------- primitives ----
@@ -575,7 +570,7 @@ fun ChoiceCard(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(if (selected) colors.brand.copy(alpha = 0.08f) else colors.ink2)
+            .background(if (selected) colors.brand.copy(alpha = 0.12f) else Color.White.copy(alpha = 0.045f))
             .border(
                 1.dp,
                 if (selected) colors.brand.copy(alpha = 0.55f) else colors.line,
@@ -657,7 +652,7 @@ fun OptionRow(
                     .defaultMinSize(minWidth = 38.dp)
                     .height(30.dp)
                     .clip(RoundedCornerShape(9.dp))
-                    .background(colors.ink3)
+                    .background(Color.White.copy(alpha = 0.07f))
                     .border(
                         1.dp,
                         if (selected) colors.brand.copy(alpha = 0.46f) else colors.line,
