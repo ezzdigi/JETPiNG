@@ -467,7 +467,7 @@ internal class ConnectionOrbView(
         // live, the supplied JETPiNG wolf artwork fades into the same orb area.
         if (state != ConnectState.LIVE) return
         val bitmap = wolfBitmap ?: return
-        val size = orbDiameter * 0.96f
+        val size = dp(72f)
         wolfBounds.set(cx - size / 2f, cy - size / 2f, cx + size / 2f, cy + size / 2f)
         wolfPaint.alpha = (255f * transitionProgress.coerceIn(0f, 1f)).toInt()
         canvas.drawBitmap(bitmap, null, wolfBounds, wolfPaint)
