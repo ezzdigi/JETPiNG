@@ -2440,63 +2440,9 @@ fun SettingsScreen(
                 onClick = onGoToAdvanced,
             )
         }
-
-        Spacer(Modifier.height(20.dp))
-        CommunityFooter()
     }
 }
 
-/**
- * Closes the settings list rather than sitting in it as one more row: this is
- * where to go for help or news, not a preference to change.
- */
-@Composable
-private fun CommunityFooter() {
-    val colors = AetherTheme.colors
-    val uriHandler = LocalUriHandler.current
-    val interaction = remember { MutableInteractionSource() }
-    var unavailable by rememberSaveable { mutableStateOf(false) }
-    val openCommunity = {
-        unavailable = runCatching { uriHandler.openUri("https://t.me/whitedns") }.isFailure
-    }
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Row(
-            modifier = Modifier
-                .clip(CircleShape)
-                .background(colors.cyan.copy(alpha = 0.10f))
-                .border(1.dp, colors.cyan.copy(alpha = 0.34f), CircleShape)
-                .tvControllerActivation(onClick = openCommunity)
-                .clickable(interaction, LocalIndication.current, onClick = openCommunity)
-                .controllerFocus(interaction, CircleShape)
-                .testTag("telegram-link")
-                .padding(start = 16.dp, end = 20.dp, top = 11.dp, bottom = 11.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            Icon(AetherIcons.Telegram, null, Modifier.size(19.dp), colors.cyan)
-            Text(stringResource(R.string.join_us_on_telegram), style = AetherTheme.type.RowTitle, color = colors.cyan)
-        }
-        if (unavailable) {
-            Text(
-                stringResource(R.string.no_app_on_this_device_can_open),
-                style = AetherTheme.type.Small,
-                color = colors.signalFailed,
-                modifier = Modifier.padding(top = 8.dp).testTag("telegram-unavailable"),
-            )
-        }
-        Spacer(Modifier.height(18.dp))
-        Icon(AetherIcons.Globe, null, Modifier.size(22.dp), colors.text3.copy(alpha = 0.5f))
-        Spacer(Modifier.height(6.dp))
-        Text(
-            stringResource(R.string.whiteaesther_com_whitedns_whiteaesther_buildconf, com.whitedns.whiteaesther.BuildConfig.VERSION_NAME),
-            style = AetherTheme.type.Small.copy(fontSize = 12.sp),
-            color = colors.text3,
-        )
-    }
-}
 
 @Composable
 fun IdentityScreen(
