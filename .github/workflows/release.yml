@@ -272,5 +272,5 @@ jobs:
             gh release upload "$tag" release-assets/* --clobber
           else
             gh release create "$tag" release-assets/* \
-              --verify-tag --generate-notes --title "WhiteAestherMobile $tag" $quiet
+              --verify-tag --generate-notes --title "JETPiNG $tag" $quiet
           fi
