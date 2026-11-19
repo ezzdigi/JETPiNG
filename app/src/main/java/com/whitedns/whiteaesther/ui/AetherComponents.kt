@@ -295,8 +295,8 @@ fun AetherCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(AetherTheme.colors.ink2)
-            .border(1.dp, AetherTheme.colors.line, shape)
+            .background(AetherTheme.colors.ink2.copy(alpha = 0.72f))
+            .border(1.dp, AetherTheme.colors.lineStrong.copy(alpha = 0.48f), shape)
             .then(
                 if (canReceiveTvFocus) {
                     Modifier
