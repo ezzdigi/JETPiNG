@@ -219,8 +219,9 @@ internal class ConnectionOrbView(
         }
 
         // 8. Draw icon and label
-        drawIcon(canvas, cx, cy - dp(6f))
-        if (state != ConnectState.LIVE) drawLabel(canvas, cx, cy + dp(36f))
+        drawIcon(canvas, cx, cy - dp(12f))
+        // Keep the action text below the logo in every connection state.
+        drawLabel(canvas, cx, cy + orbRadius + dp(30f))
 
         canvas.restore()
 
@@ -467,7 +468,7 @@ internal class ConnectionOrbView(
         // live, the supplied JETPiNG wolf artwork fades into the same orb area.
         if (state != ConnectState.LIVE) return
         val bitmap = wolfBitmap ?: return
-        val size = dp(72f)
+        val size = dp(92f)
         wolfBounds.set(cx - size / 2f, cy - size / 2f, cx + size / 2f, cy + size / 2f)
         wolfPaint.alpha = (255f * transitionProgress.coerceIn(0f, 1f)).toInt()
         canvas.drawBitmap(bitmap, null, wolfBounds, wolfPaint)
@@ -506,8 +507,8 @@ internal class ConnectionOrbView(
         // A loose cloud at rest, inward-moving dust during handshake, and a
         // compact constellation once the tunnel is live.
         if (now - lastParticleTime >= when (state) {
-                ConnectState.IDLE -> 85L
-                ConnectState.WORKING -> 55L
+                ConnectState.IDLE -> 42L
+                ConnectState.WORKING -> 38L
                 ConnectState.LIVE -> 95L
                 ConnectState.FAILED -> 180L
             }) {
@@ -555,9 +556,9 @@ internal class ConnectionOrbView(
         val cx = width / 2f
         val cy = height / 2f
         val colors = particleColors()
-        repeat(14) {
+        repeat(28) {
             val angle = Random.nextFloat() * 2f * PI.toFloat()
-            val radius = orbRadius * (0.18f + Random.nextFloat() * 1.05f)
+            val radius = orbRadius * (0.18f + Random.nextFloat() * 1.28f)
             particles.add(Particle(
                 x = cx + cos(angle) * radius,
                 y = cy + sin(angle) * radius,
@@ -565,20 +566,20 @@ internal class ConnectionOrbView(
                 vy = (Random.nextFloat() - 0.5f) * 0.22f,
                 size = dp(1.1f + Random.nextFloat() * 2.0f),
                 life = 0f,
-                maxLife = 1800f + Random.nextFloat() * 1500f,
-                alpha = 0.38f + Random.nextFloat() * 0.42f,
+                maxLife = 2600f + Random.nextFloat() * 1800f,
+                alpha = 0.52f + Random.nextFloat() * 0.42f,
                 color = colors[Random.nextInt(colors.size)],
                 slow = true,
             ))
         }
-        while (particles.size > 420) particles.removeAt(0)
+        while (particles.size > 620) particles.removeAt(0)
     }
 
     private fun emitConvergingParticles() {
         val cx = width / 2f
         val cy = height / 2f
         val colors = particleColors()
-        repeat(14) {
+        repeat(24) {
             val angle = Random.nextFloat() * 2f * PI.toFloat()
             val radius = orbRadius * (0.72f + Random.nextFloat() * 0.5f)
             val speed = 0.65f + Random.nextFloat() * 0.9f
@@ -595,7 +596,7 @@ internal class ConnectionOrbView(
                 slow = false,
             ))
         }
-        while (particles.size > 420) particles.removeAt(0)
+        while (particles.size > 620) particles.removeAt(0)
     }
 
     private fun emitConnectedParticles() {
