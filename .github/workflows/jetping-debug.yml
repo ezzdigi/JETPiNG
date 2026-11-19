@@ -1,0 +1,87 @@
+name: JETPiNG Debug APK
+run-name: Build JETPiNG installable debug APK
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "app/**"
+      - "native/**"
+      - ".github/workflows/jetping-debug.yml"
+      - ".github/actions/android-toolchain/**"
+      - "gradle/**"
+      - "gradlew"
+      - "*.gradle.kts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jetping-debug-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ANDROID_BUILD_TOOLS: "36.0.0"
+
+jobs:
+  build:
+    name: Build stable JETPiNG debug APKs
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/android-toolchain
+        with:
+          rust-components: rustfmt, clippy
+
+      - name: Build the exit chain engine
+        shell: pwsh
+        run: |
+          ./native/chain/setup.ps1
+          ./native/chain/build.ps1
+
+      - name: Fetch the Psiphon server list
+        shell: pwsh
+        run: ./native/psiphon/setup.ps1
+
+      - name: Build the pluggable transports
+        shell: pwsh
+        run: |
+          ./native/tor/setup.ps1
+          ./native/tor/build.ps1
+
+      - name: Build the Worker engine
+        shell: pwsh
+        run: ./native/xray/build.ps1
+
+      - name: Test and build stable debug APKs
+        run: |
+          ./gradlew testStableDebugUnitTest lintStableDebug assembleStableDebug
+
+      - name: Verify APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk_dir="app/build/outputs/apk/stable/debug"
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            apk="${apk_dir}/app-stable-${abi}-debug.apk"
+            test -f "$apk"
+            python3 tools/verify_native_dependencies.py --ndk "${ANDROID_HOME}/ndk/29.0.14206865" "$apk"
+            jar tf "$apk" | grep -F "lib/${abi}/libwhiteaesther_core.so"
+            jar tf "$apk" | grep -F "lib/${abi}/libwhiteaestherchain.so"
+            jar tf "$apk" | grep -F "lib/${abi}/libwhiteaesther_xray.so"
+            jar tf "$apk" | grep -F "lib/${abi}/libgojni.so"
+          done
+          universal="${apk_dir}/app-stable-universal-debug.apk"
+          test -f "$universal"
+          python3 tools/verify_native_dependencies.py --ndk "${ANDROID_HOME}/ndk/29.0.14206865" "$universal"
+
+      - name: Upload JETPiNG APKs
+        uses: actions/upload-artifact@v7
+        with:
+          name: JETPiNG-debug-APKs
+          path: app/build/outputs/apk/stable/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
