@@ -570,7 +570,7 @@ fun ChoiceCard(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(if (selected) colors.brand.copy(alpha = 0.08f) else colors.ink2)
+            .background(if (selected) colors.brand.copy(alpha = 0.12f) else Color.White.copy(alpha = 0.045f))
             .border(
                 1.dp,
                 if (selected) colors.brand.copy(alpha = 0.55f) else colors.line,
@@ -652,7 +652,7 @@ fun OptionRow(
                     .defaultMinSize(minWidth = 38.dp)
                     .height(30.dp)
                     .clip(RoundedCornerShape(9.dp))
-                    .background(colors.ink3)
+                    .background(Color.White.copy(alpha = 0.07f))
                     .border(
                         1.dp,
                         if (selected) colors.brand.copy(alpha = 0.46f) else colors.line,
