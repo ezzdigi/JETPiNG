@@ -196,7 +196,8 @@ still outstanding — worth reading before changing the connection UI.
 ## Releasing
 
 CI verifies every pull request and every push to `main`. Publishing happens on
-tags alone:
+tags alone. راهنمای فارسی ساخت کلید امضا، تنظیم Secrets و انتشار آپدیت در
+[docs/RELEASE.fa.md](docs/RELEASE.fa.md) موجود است:
 
 ```bash
 git tag v1.2.3 && git push origin v1.2.3
